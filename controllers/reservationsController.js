@@ -1,5 +1,6 @@
 const Reservation = require('../models/Reservation');
 const MassageShop = require('../models/MassageShop');
+const { validateAppointmentTime } = require('../utils/validateTime');
 
 //@desc     Get all reservations
 //@route    GET /api/v1/reservations
@@ -85,7 +86,24 @@ exports.addReservations = async (req, res, next) => {
     try {
         req.body.user = req.user.id;
 
-        // Check for existing reservations
+        // Check if massage shop exists and get its operating hours
+        const massageShop = await MassageShop.findById(req.body.massageShop);
+        if (!massageShop) {
+            return res.status(404).json({
+                success: false,
+                message: 'Massage shop not found'
+            });
+        }
+        
+        // Validate appointment time is within operating hours
+        if (!validateAppointmentTime(req.body.apptDate, massageShop.openTime, massageShop.closeTime)) {
+            return res.status(400).json({
+                success: false,
+                message: `Appointment time must be between ${massageShop.openTime} and ${massageShop.closeTime}`
+            });
+        }
+
+        // Check for number of existing reservations
         const existingReservations = await Reservation.find({ user: req.user.id });
 
         // If the user is not an admin, they can only create 3 reservations
@@ -131,6 +149,28 @@ exports.updateReservations = async (req, res, next) => {
                 success: false,
                 message: 'User ' + req.user.id + ' is not authorized to update this reservation'
             });
+        }
+
+        // If updating appointment date or massage shop, validate time
+        if (req.body.apptDate || req.body.massageShop) {
+            const massageShopId = req.body.massageShop || reservation.massageShop;
+            const apptDate = req.body.apptDate || reservation.apptDate;
+
+            const massageShop = await MassageShop.findById(massageShopId);
+            if (!massageShop) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Massage shop not found'
+                });
+            }
+
+            // Validate appointment time is within operating hours
+            if (!validateAppointmentTime(apptDate, massageShop.openTime, massageShop.closeTime)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Appointment time must be between ${massageShop.openTime} and ${massageShop.closeTime}`
+                });
+            }
         }
 
         reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
