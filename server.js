@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/v1/auth/', authRouthes);
-app.use('/api/v1/auth/', reservationRoutes);
+app.use('/api/v1/reservation/', reservationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
