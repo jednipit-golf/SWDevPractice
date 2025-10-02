@@ -1,0 +1,38 @@
+const mongoose = require('mongoose');
+
+const ReservationSchema = new mongoose.Schema({
+    apptDate: {
+        type: Date,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    massageShop: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'MassageShop',
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+// Index to improve query performance
+ReservationSchema.index({ user: 1 });
+
+// Validate that user doesn't exceed 3 reservations
+ReservationSchema.pre('save', async function (next) {
+    const reservationCount = await this.constructor.countDocuments({ user: this.user });
+
+    if (reservationCount >= 3) {
+        const error = new Error('User cannot have more than 3 reservations');
+        return next(error);
+    }
+    next();
+});
+
+module.exports = mongoose.model('Reservation', ReservationSchema);
