@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const UserUnverified = require('../models/UserUnverified');
 const crypto = require('crypto');
+const { sendVerificationEmail } = require('../utils/sendEmail');
 
 //@desc     Register user
 //@route    POST /api/v1/auth/register
@@ -33,10 +34,13 @@ exports.register=async (req,res,next)=>{
             verificationExpire
         });
 
+        // Send verification email
+        await sendVerificationEmail(email, verificationToken);
+
         res.status(201).json({
             success: true,
-            message: 'Registration successful. Please check your email for verification.',
-            verificationToken // In production, this should be sent via email
+            verificationToken, // In production, this should be sent via email
+            message: 'Registration successful. Please check your email for verification.'
         });
     } catch(err){ 
         res.status(400).json({success:false, message: err.message}); 
