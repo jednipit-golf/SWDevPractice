@@ -26,7 +26,7 @@ exports.register=async (req,res,next)=>{
         if (existingUnverifiedUser) {
             const timeSinceLastToken = Date.now() - existingUnverifiedUser.lastTokenSent.getTime();
             if (timeSinceLastToken < 90000) { // 90000
-                const waitTime = Math.ceil((60000 - timeSinceLastToken) / 1000);
+                const waitTime = Math.ceil((90000 - timeSinceLastToken) / 1000);
                 return res.status(429).json({
                     success: false,
                     message: `Please wait ${waitTime} seconds before requesting a new verification token`

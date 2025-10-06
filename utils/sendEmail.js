@@ -27,28 +27,30 @@ const sendEmail = async (options) => {
 
 const sendVerificationEmail = async (email, verificationToken) => {
   const message = `
-  Welcome to VacQ!
-  
-  Please verify your email using the verification token below:
-  
-  Verification Token: ${verificationToken}
-  
-  Use this token to verify your account through the API endpoint:
-  POST /api/v1/auth/verify
-  
-  Body:
-  {
-    "email": "${email}",
-    "verificationToken": "${verificationToken}"
-  }
-  
-  If you did not create an account, please ignore this email.
-  This token will expire in 1 hour.
+Hello,
+
+Welcome to VacQ - Your Massage Reservation System!
+
+To complete your registration, please use the verification code below:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    Verification Code: ${verificationToken}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ This code will expire in 10 minutes.
+🔒 For your security, do not share this code with anyone.
+
+If you didn't create an account with VacQ, please ignore this email.
+
+Best regards,
+VacQ Team
   `;
 
   await sendEmail({
     email: email,
-    subject: 'VacQ - Email Verification Token',
+    subject: '🔐 VacQ - Email Verification Code',
     message: message,
   });
 };
