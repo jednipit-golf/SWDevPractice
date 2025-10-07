@@ -96,7 +96,7 @@ exports.addReservations = async (req, res, next) => {
         }
 
         // Validate appointment time is within operating hours
-        if (!validateAppointmentTime(req.body.apptDate, massageShop.openTime, massageShop.closeTime)) {
+        if (!validateAppointmentTime(req.body.apptTime, massageShop.openTime, massageShop.closeTime)) {
             return res.status(400).json({
                 success: false,
                 message: `Appointment time must be between ${massageShop.openTime} and ${massageShop.closeTime}`
@@ -160,10 +160,11 @@ exports.updateReservations = async (req, res, next) => {
         }
 
         // If updating appointment date or massage shop, validate time
-        if (req.body.apptDate || req.body.massageShop) {
+        if (req.body.apptDate || req.body.apptTime || req.body.massageShop) {
             const massageShopId = req.body.massageShop || reservation.massageShop;
             const apptDate = req.body.apptDate || reservation.apptDate;
-
+            const apptTime = req.body.apptTime || reservation.apptTime;
+            
             const massageShop = await MassageShop.findById(massageShopId);
             if (!massageShop) {
                 return res.status(404).json({
@@ -173,7 +174,7 @@ exports.updateReservations = async (req, res, next) => {
             }
 
             // Validate appointment time is within operating hours
-            if (!validateAppointmentTime(apptDate, massageShop.openTime, massageShop.closeTime)) {
+            if (!validateAppointmentTime(apptTime, massageShop.openTime, massageShop.closeTime)) {
                 return res.status(400).json({
                     success: false,
                     message: `Appointment time must be between ${massageShop.openTime} and ${massageShop.closeTime}`
