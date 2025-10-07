@@ -193,7 +193,7 @@ exports.updateReservations = async (req, res, next) => {
             });
         }
 
-        // If updating appointment time or massage shop, check validate time
+        // If updating appointment time or massage shop, validate appointment time
         if (req.body.apptDate || req.body.apptTime || req.body.massageShop) {
             const massageShopId = req.body.massageShop || reservation.massageShop;
             const apptTime = req.body.apptTime || reservation.apptTime;
@@ -214,7 +214,7 @@ exports.updateReservations = async (req, res, next) => {
                 });
             }
 
-            // Check cancellation policy for owner and admin users)
+            // Check cancellation policy for owner and admin users
             if (!timeCancellingPolicyCheck(reservation.apptDate, reservation.apptTime)) {
                 return res.status(400).json({
                     success: false,
@@ -262,7 +262,7 @@ exports.deleteReservations = async (req, res, next) => {
             });
         }
 
-        // Check cancellation policy for owner and admin users)
+        // Check cancellation policy for owner and admin users
         if (reservation.user.toString() == req.user.id || req.user.role == 'admin') {
             if (!timeCancellingPolicyCheck(reservation.apptDate, reservation.apptTime)) {
                 return res.status(400).json({
