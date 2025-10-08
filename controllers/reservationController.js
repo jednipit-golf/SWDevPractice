@@ -86,7 +86,24 @@ exports.getReservationsById = async (req, res, next) => {
 //@access   Private
 exports.addReservations = async (req, res, next) => {
     try {
-        req.body.user = req.user.id;
+        // Determine who the reservation will belong to.
+        let targetUserId;
+        if (req.user.role === 'admin') {
+            // Admin may specify a user id to book for, otherwise default to admin
+            targetUserId = req.body.user || req.user.id;
+        } else {
+            // Regular users must book for themselves only
+            if (req.body.user && req.body.user.toString() !== req.user.id.toString()) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'You are not allowed to create a reservation for another user'
+                });
+            }
+            targetUserId = req.user.id;
+        }
+
+        // Ensure request body contains the resolved user id
+        req.body.user = targetUserId;
 
         // Validate apptDate format (DD-MM-YYYY)
         if (req.body.apptDate && !validateDateFormat(req.body.apptDate)) {
@@ -121,14 +138,14 @@ exports.addReservations = async (req, res, next) => {
             });
         }
 
-        // Check for number of existing reservations
-        const existingReservations = await Reservation.find({ user: req.user.id });
+        // Check for number of existing reservations for the target user
+        const existingReservations = await Reservation.find({ user: targetUserId });
 
-        // If the user is not an admin, they can only create 3 reservations
+        // If the target user is not an admin and the requester is not an admin, enforce 3-reservation limit
         if (existingReservations.length >= 3 && req.user.role !== 'admin') {
             return res.status(400).json({
                 success: false,
-                message: `The user with ID ${req.user.id} has already made 3 reservations`
+                message: `The user with ID ${targetUserId} has already made 3 reservations`
             });
         }
 
