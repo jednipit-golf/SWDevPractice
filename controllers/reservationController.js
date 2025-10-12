@@ -3,6 +3,7 @@ const MassageShop = require('../models/MassageShop');
 const { validateAppointmentTime, timeCancellingPolicyCheck } = require('../utils/validateTime');
 const { validateDateFormat } = require('../utils/dateCheck');
 const { validateTimeFormat } = require('../utils/timeCheck');
+const User = require('../models/User');
 
 //@desc     Get all reservations
 //@route    GET /api/v1/reservation
@@ -86,6 +87,14 @@ exports.getReservationsById = async (req, res, next) => {
 //@access   Private
 exports.addReservations = async (req, res, next) => {
     try {
+        // Check if user ID exists
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({
+                success: false,
+                message: 'User authentication required'
+            });
+        }
+
         // Determine who the reservation will belong to.
         let targetUserId;
         if (req.user.role === 'admin') {
@@ -100,6 +109,23 @@ exports.addReservations = async (req, res, next) => {
                 });
             }
             targetUserId = req.user.id;
+        }
+
+        // Validate that targetUserId is not null
+        if (!targetUserId) {
+            return res.status(400).json({
+                success: false,
+                message: 'User ID is required for reservation'
+            });
+        }
+
+        // Verify that the target user exists in the database
+        const targetUser = await User.findById(targetUserId);
+        if (!targetUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'Target user not found'
+            });
         }
 
         // Ensure request body contains the resolved user id
