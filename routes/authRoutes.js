@@ -9,11 +9,11 @@ const {
 
 const router = express.Router();
 
-const {protect}= require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 
 router.post('/register', register);
-router.post('/login',login);
+router.post('/login', login);
 router.post('/verify', verifyUser);
-router.get('/logout',logout);
-router.get('/me',protect,getMe);
+router.get('/logout', logout);
+router.get('/me', protect, getMe);
 module.exports = router;

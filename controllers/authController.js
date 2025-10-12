@@ -127,23 +127,23 @@ exports.login = async (req, res, next) => {
 //@desc     Logout user
 //@route    GET /api/v1/auth/logout
 //@access   Public
-exports.logout = async (req, res, next) => { 
-    res.clearCookie('token', { 
-        httpOnly: true, 
-        sameSite: 'strict' 
-    }); 
-    res.clearCookie('accessToken', { 
-        httpOnly: true, 
-        sameSite: 'strict' 
-    }); 
-    res.clearCookie('refreshToken', { 
-        httpOnly: true, 
-        sameSite: 'strict' 
-    }); 
-    res.status(200).json({ 
-        success: true, 
-        data: {} 
-    }); 
+exports.logout = async (req, res, next) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'strict'
+    });
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        sameSite: 'strict'
+    });
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        sameSite: 'strict'
+    });
+    res.status(200).json({
+        success: true,
+        data: {}
+    });
 };
 
 //Get token from model, create cookie and send response to client
