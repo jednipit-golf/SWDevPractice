@@ -122,7 +122,7 @@ exports.login = async (req, res, next) => {
         //return token
         return sendTokenResponse(user, 200, res);
     } catch (err) {
-        res.status(401).json({ success: false, msg: 'Cannot convert email or password to string' });
+        res.status(401).json({ success: false, msg: 'Login failed. Please try again.' });
     }
 };
 

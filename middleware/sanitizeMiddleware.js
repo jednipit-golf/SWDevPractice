@@ -7,6 +7,5 @@ module.exports = (req, res, next) => {
   // sanitize params
   if (req.params) req.params = mongoSanitize.sanitize(req.params);
 
-  // make it read only**
   next();
 };
