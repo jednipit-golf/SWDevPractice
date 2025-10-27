@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
+const sanitizeMiddleware = require('./middleware/sanitizeMiddleware');
 
 //Route files
 const authRouthes = require('./routes/authRoutes');
@@ -20,6 +21,9 @@ app.use(express.json());
 
 //Cookie parser
 app.use(cookieParser());
+
+//Sanitize data
+app.use(sanitizeMiddleware);
 
 app.use('/api/v1/auth/', authRouthes);
 app.use('/api/v1/reservation/', reservationRoutes);
