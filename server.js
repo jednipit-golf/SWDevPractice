@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const sanitizeMiddleware = require('./middleware/sanitizeMiddleware');
 const helmet=require('helmet');
 const {xss}=require('express-xss-sanitizer');
+const limiter = require('./middleware/rateLimiter');
 
 //Route files
 const authRouthes = require('./routes/authRoutes');
@@ -32,6 +33,9 @@ app.use(helmet());
 
 //Prevent XSS attacks
 app.use(xss());
+
+// Apply rate limiter 
+app.use(limiter);
 
 app.use('/api/v1/auth/', authRouthes);
 app.use('/api/v1/reservation/', reservationRoutes);
