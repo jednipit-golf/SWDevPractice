@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const sanitizeMiddleware = require('./middleware/sanitizeMiddleware');
+const helmet=require('helmet');
 
 //Route files
 const authRouthes = require('./routes/authRoutes');
@@ -24,6 +25,9 @@ app.use(cookieParser());
 
 //Sanitize data
 app.use(sanitizeMiddleware);
+
+//Set security headers
+app.use(helmet());
 
 app.use('/api/v1/auth/', authRouthes);
 app.use('/api/v1/reservation/', reservationRoutes);
