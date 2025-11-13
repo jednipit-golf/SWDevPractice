@@ -265,6 +265,14 @@ exports.updateReservations = async (req, res, next) => {
                 });
             }
 
+            // Check if updating to a past time
+            if (timePastingCheck(req.body.apptDate, req.body.apptTime)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Cannot create reservation for a past time'
+                });
+            }
+
             // Check cancellation policy for owner and admin users
             if (!timeCancellingPolicyCheck(reservation.apptDate, reservation.apptTime)) {
                 return res.status(400).json({
