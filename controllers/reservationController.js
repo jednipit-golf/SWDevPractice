@@ -1,6 +1,6 @@
 const Reservation = require('../models/Reservation');
 const MassageShop = require('../models/MassageShop');
-const { validateAppointmentTime, timeCancellingPolicyCheck, timePastingCheck } = require('../utils/validateTime');
+const { validateAppointmentTime, timeCancellingPolicyCheck, timePastingCheck, deletePastReservation } = require('../utils/validateTime');
 const { validateDateFormat } = require('../utils/dateCheck');
 const { validateTimeFormat } = require('../utils/timeCheck');
 const User = require('../models/User');
@@ -9,6 +9,7 @@ const User = require('../models/User');
 //@route    GET /api/v1/reservation
 //@access   Private
 exports.getReservations = async (req, res, next) => {
+    await deletePastReservation();
     try {
         let query;
 
@@ -49,6 +50,7 @@ exports.getReservations = async (req, res, next) => {
 //@route    GET /api/v1/reservation/:id
 //@access   Private
 exports.getReservationsById = async (req, res, next) => {
+    await deletePastReservation();
     try {
         const reservation = await Reservation.findById(req.params.id).populate({
             path: 'massageShop',

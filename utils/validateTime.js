@@ -1,3 +1,5 @@
+const Reservation = require('../models/Reservation');
+
 // Convert time string (HH:MM) to minutes for comparison
 const timeToMinutes = (timeString) => {
     const [hours, minutes] = timeString.split(':').map(Number);
@@ -84,8 +86,23 @@ const timePastingCheck = (apptDate, apptTime) => {
     return hoursUntilAppointment < 0;
 }
 
+async function deletePastReservation() {
+    try {
+        const pastReservations = await Reservation.find();
+        
+        for (const reservation of pastReservations) {
+            if (timePastingCheck(reservation.apptDate, reservation.apptTime)) {
+                await Reservation.findByIdAndDelete(reservation._id);
+            }
+        }
+    } catch (err) {
+        console.error('Error cleaning expired bookings:', err.stack || err);
+    }
+}
+
 module.exports = {
     validateAppointmentTime,
     timeCancellingPolicyCheck,
-    timePastingCheck
+    timePastingCheck,
+    deletePastReservation
 };
