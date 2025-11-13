@@ -105,7 +105,7 @@ exports.login = async (req, res, next) => {
         if (!user) {
             return res.status(400).json({
                 success: false,
-                msg: 'Invalid credentials'
+                msg: 'no user found with this email'
             });
         }
 
@@ -115,7 +115,7 @@ exports.login = async (req, res, next) => {
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
-                msg: 'Invalid credentials'
+                msg: 'Invalid password'
             });
         }
 

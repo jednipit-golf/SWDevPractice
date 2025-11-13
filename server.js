@@ -12,6 +12,7 @@ const cors = require('cors');
 //Route files
 const authRouthes = require('./routes/authRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
+const massageShopRoutes = require('./routes/massageshopRoutes');
 
 //Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -47,6 +48,7 @@ app.use(cors());
 
 app.use('/api/v1/auth/', authRouthes);
 app.use('/api/v1/reservation/', reservationRoutes);
+app.use('/api/v1/massageshops/', massageShopRoutes);
 
 const PORT = process.env.PORT || 5000;
 
