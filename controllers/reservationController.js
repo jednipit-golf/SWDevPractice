@@ -321,14 +321,12 @@ exports.deleteReservations = async (req, res, next) => {
             });
         }
 
-        // Check cancellation policy for owner and admin users
-        if (reservation.user.toString() == req.user.id || req.user.role !== 'admin') {
-            if (!timeCancellingPolicyCheck(reservation.apptDate, reservation.apptTime)) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Reservations can only be cancelled at least 3 hours before the appointment time'
-                });
-            }
+        // Check cancellation policy 
+        if (!timeCancellingPolicyCheck(reservation.apptDate, reservation.apptTime)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Reservations can only be cancelled at least 3 hours before the appointment time'
+            });
         }
 
         await reservation.deleteOne();

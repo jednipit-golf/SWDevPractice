@@ -54,8 +54,8 @@ const timeCancellingPolicyCheck = (apptDate, apptTime) => {
     // console.log('Hours Until Appointment:', hoursUntilAppointment);
     // console.log('Can Cancel (>=3 hours):', hoursUntilAppointment >= 3);
 
-    // Allow cancellation if appointment is more than 3 hours away or past
-    return hoursUntilAppointment >= 3 || hoursUntilAppointment < 0;
+    // Allow cancellation if appointment is more than 3 hours away 
+    return hoursUntilAppointment >= 3;
 }
 
 const timePastingCheck = (apptDate, apptTime) => {
