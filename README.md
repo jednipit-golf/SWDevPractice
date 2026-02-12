@@ -5,7 +5,7 @@ It mainly focuses on **user authentication**, **reservation management**, and ba
 
 ---
 
-## 🧩 Overview
+##  Overview
 
 - **Framework:** Node.js + Express  
 - **Database:** MongoDB (via Mongoose)  
@@ -21,7 +21,7 @@ Common middleware used:
 - Basic error handling middleware
 
 ---
-## 📂 Project Structure
+##  Project Structure
 
 ```
 VacQ/
@@ -54,7 +54,7 @@ VacQ/
 ```
 ---
 
-## 📜 Main Features
+##  Main Features
 
 1. Users can register with their name, telephone number, email, and password.
 2. Registered users can log in and log out using their email and password.
@@ -67,7 +67,7 @@ VacQ/
 
 ---
 
-## 📝 Additional Requirements
+##  Additional Requirements
 
 - **Security:** Protect against common vulnerabilities (e.g., XSS, SQL injection).
 - **Two-Step Verification:**  
@@ -78,7 +78,7 @@ VacQ/
   After that time window has passed, the system will **not allow cancellations**.
 ---
 
-## ⚙️ How to Run
+##  How to Run
 
 1. **Install dependencies**
    ```bash
